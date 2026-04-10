@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .corridor { fill: #2a2a2a; stroke: #444; stroke-width: 2; }
+      .stand { fill: #1a1a1a; stroke: #555; stroke-width: 1; }
+      .pitch { fill: #143314; stroke: #fff; stroke-width: 2; }
+      .zone { transition: fill 0.5s ease; }
+    </style>
+  </defs>
+
+  <!-- Pitch -->
+  <rect class="pitch" x="250" y="200" width="300" height="200" rx="20"/>
+
+  <!-- North Zones -->
+  <g id="zone_north_1" class="zone">
+    <rect class="corridor" x="100" y="50" width="600" height="100"/>
+    <text x="350" y="105" fill="#fff" font-family="sans-serif">North Concourse (Zone N1)</text>
+  </g>
+  <rect class="stand" x="150" y="150" width="500" height="50" rx="5"/>
+
+  <!-- South Zones -->
+  <g id="zone_south_1" class="zone">
+    <rect class="corridor" x="100" y="450" width="600" height="100"/>
+    <text x="350" y="505" fill="#fff" font-family="sans-serif">South Concourse (Zone S1)</text>
+  </g>
+  <rect class="stand" x="150" y="400" width="500" height="50" rx="5"/>
+
+  <!-- East Zones -->
+  <g id="zone_east_1" class="zone">
+    <rect class="corridor" x="650" y="200" width="100" height="200"/>
+    <text x="660" y="300" fill="#fff" font-family="sans-serif" transform="rotate(90 660,300)">East (E1)</text>
+  </g>
+  <rect class="stand" x="550" y="200" width="50" height="200" rx="5"/>
+
+  <!-- West Zones -->
+  <g id="zone_west_1" class="zone">
+    <rect class="corridor" x="50" y="200" width="100" height="200"/>
+    <text x="90" y="300" fill="#fff" font-family="sans-serif" transform="rotate(-90 90,300)">West (W1)</text>
+  </g>
+  <rect class="stand" x="200" y="200" width="50" height="200" rx="5"/>
+
+  <!-- Vendor Locations -->
+  <circle id="vendor_north_7" cx="200" cy="100" r="15" fill="#0f62fe"/>
+  <text x="225" y="105" fill="#fff" font-size="12">North Grill</text>
+
+  <circle id="vendor_south_3" cx="600" cy="500" r="15" fill="#0f62fe"/>
+  <text x="625" y="505" fill="#fff" font-size="12">South Kiosk</text>
+
+</svg>

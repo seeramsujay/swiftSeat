@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SwiftSeat: Smart Venue Assistant</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d0d0d">
+</head>
+<body>
+  <!-- Emergency Escape Overlay -->
+  <div id="emergency-mode" class="hidden">
+    <h1>🚨 EMERGENCY: EVACUATE 🚨</h1>
+    <p>Follow the high-contrast arrow to safety.</p>
+    <div class="escape-arrow">⬇️</div>
+  </div>
+
+  <div id="app-container">
+    <header class="top-nav">
+      <h2>SwiftSeat</h2>
+      <button id="toggle-contrast" aria-label="Toggle High Contrast">🌓</button>
+    </header>
+
+    <main class="content">
+      <!-- Chat Interface -->
+      <section id="chat-section">
+        <div id="chat-history" aria-live="polite">
+          <div class="message system">
+            Hello! I'm your Gemini Stadium Concierge. Try saying "I want a burger" or ask about wait times.
+          </div>
+        </div>
+        <div id="chat-input-bar">
+          <input type="text" id="chat-input" placeholder="Type or speak a request..." aria-label="Chat input">
+          <button id="btn-camera" aria-label="Upload photo">📷</button>
+          <button id="btn-send" aria-label="Send message">Send</button>
+        </div>
+      </section>
+
+      <!-- Heatmap / Visualizer -->
+      <section id="map-section">
+        <h3>Live Venue Heatmap</h3>
+        <div id="heatmap-container">
+          <object data="assets/stadium.svg" type="image/svg+xml" id="stadium-svg" aria-label="Live density map of the stadium">
+            <!-- Fallback text for screen readers -->
+            Stadium heatmap displaying crowd density in concourse zones.
+          </object>
+        </div>
+      </section>
+
+      <!-- PALO Recommended Routing -->
+      <section id="routing-section" class="hidden">
+        <h3>Optimal Route</h3>
+        <div id="route-details"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <!-- Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  
+  <script src="app.js"></script>
+</body>
+</html>

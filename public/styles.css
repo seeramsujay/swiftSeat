@@ -1,0 +1,161 @@
+/* Base Reset & Colors */
+:root {
+  --bg-color: #0d0d0d;
+  --text-color: #f1f1f1;
+  --primary-color: #0f62fe;
+  --accent-color: #00e676;
+  --panel-bg: #1f1f1f;
+  --danger-color: #fa4d56;
+  --warning-color: #f1c21b;
+  --safe-color: #24a148;
+}
+
+/* High Contrast Mode Variables */
+.high-contrast {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --primary-color: #ffff00;
+  --panel-bg: #222222;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: var(--panel-bg);
+  border-bottom: 1px solid #333;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 10px;
+  gap: 10px;
+}
+
+/* Chat Section */
+#chat-section {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--panel-bg);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+#chat-history {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message {
+  padding: 8px 12px;
+  border-radius: 6px;
+  max-width: 85%;
+}
+
+.message.system {
+  align-self: flex-start;
+  background-color: #333;
+}
+
+.message.user {
+  align-self: flex-end;
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+#chat-input-bar {
+  display: flex;
+  gap: 5px;
+}
+
+#chat-input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  background: #333;
+  color: white;
+}
+
+/* Heatmap Section */
+#map-section {
+  flex: 1;
+  background-color: var(--panel-bg);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+#heatmap-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #444;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#stadium-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* SVG dynamic styling classes */
+.zone-safe { fill: var(--safe-color) !important; opacity: 0.8; }
+.zone-warning { fill: var(--warning-color) !important; opacity: 0.8; }
+.zone-critical { fill: var(--danger-color) !important; opacity: 0.8; }
+
+/* Emergency Mode */
+#emergency-mode {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.escape-arrow {
+  font-size: 100px;
+  animation: pulse 1s infinite alternate;
+}
+@keyframes pulse {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(20px); }
+}
