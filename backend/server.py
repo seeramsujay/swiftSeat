@@ -49,20 +49,37 @@ except Exception as e:
     chat_session = None
 
 
+import base64
+from io import BytesIO
+from PIL import Image
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
     data = request.json
     user_message = data.get("message", "")
+    image_b64 = data.get("image", None)
     
-    if not user_message:
+    if not user_message and not image_b64:
         return jsonify({"error": "Empty message"}), 400
 
     # If no real API key, return a mock response matching our function calling structure
     if not chat_session:
-        return handle_mock_chat(user_message)
+        return handle_mock_chat(user_message, image_b64)
 
     try:
-        response = chat_session.send_message(user_message)
+        # Prepare multimodal payload
+        payload = []
+        if user_message:
+            payload.append(user_message)
+        if image_b64:
+            # Decode base64 to PIL Image
+            if "," in image_b64:
+                image_b64 = image_b64.split(",")[1]
+            image_bytes = base64.b64decode(image_b64)
+            img = Image.open(BytesIO(image_bytes))
+            payload.append(img)
+
+        response = chat_session.send_message(payload)
         
         # Check if Gemini decided to invoke a tool (Function Calling)
         if hasattr(response, "function_call") and response.function_call:
@@ -89,10 +106,17 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 
-def handle_mock_chat(msg):
+def handle_mock_chat(msg, img=None):
     # Mocking Gemini logic if API key isn't provided
-    lower_msg = msg.lower()
-    if "hungry" in lower_msg or "burger" in lower_msg or "food" in lower_msg:
+    lower_msg = (msg or "").lower()
+    if img:
+        return jsonify({
+            "type": "function_call",
+            "function": "get_optimal_route",
+            "arguments": {"food_category": "food"},
+            "reply": "(Mock Vision) I analyzed that sign! Looks like you are near West 1. I'm routing you from here."
+        })
+    elif "hungry" in lower_msg or "burger" in lower_msg or "food" in lower_msg:
         return jsonify({
             "type": "function_call",
             "function": "get_optimal_route",

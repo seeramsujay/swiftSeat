@@ -109,18 +109,47 @@ document.getElementById('toggle-contrast').addEventListener('click', () => {
   document.body.classList.toggle('high-contrast');
 });
 
+// Trigger hidden file input
+document.getElementById('btn-camera').addEventListener('click', () => {
+  document.getElementById('camera-input').click();
+});
+
+let currentImageB64 = null;
+
+// Handle file selection
+document.getElementById('camera-input').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    currentImageB64 = event.target.result;
+    addChatMessage("📷 [Image attached for analysis]", "user");
+  };
+  reader.readAsDataURL(file);
+});
+
 document.getElementById('btn-send').addEventListener('click', async () => {
   const input = document.getElementById('chat-input').value;
-  if (!input) return;
+  if (!input && !currentImageB64) return;
   
-  addChatMessage(input, 'user');
-  document.getElementById('chat-input').value = '';
+  if (input) {
+    addChatMessage(input, 'user');
+    document.getElementById('chat-input').value = '';
+  }
   
+  const payload = { message: input };
+  if (currentImageB64) {
+    payload.image = currentImageB64;
+    currentImageB64 = null; // Clear after sending
+  }
+
   try {
+    addChatMessage("Analyzing context...", "system");
     const response = await fetch('http://localhost:5000/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: input })
+      body: JSON.stringify(payload)
     });
     
     const data = await response.json();

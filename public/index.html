@@ -23,7 +23,6 @@
     </header>
 
     <main class="content">
-      <!-- Chat Interface -->
       <section id="chat-section">
         <div id="chat-history" aria-live="polite">
           <div class="message system">
@@ -31,6 +30,7 @@
           </div>
         </div>
         <div id="chat-input-bar">
+          <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
           <input type="text" id="chat-input" placeholder="Type or speak a request..." aria-label="Chat input">
           <button id="btn-camera" aria-label="Upload photo">📷</button>
           <button id="btn-send" aria-label="Send message">Send</button>
