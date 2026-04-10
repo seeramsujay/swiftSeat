@@ -40,6 +40,51 @@ See `Archives/algorithm_design.md` for the full specification with worked exampl
   - `roadmap.md` — Phase-by-phase development checklist.
 - `project_guidelines.md` — Submission rules and requirements.
 
+## 🚀 How to Run Locally
+
+You will need three terminal windows to run the complete simulation environment: the stadium mock data generator, the Gemini AI proxy, and the frontend app.
+
+### 1. Setup the Python Environment
+Open a terminal and install the required dependencies:
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+### 2. Configure Gemini API
+1. Get a Gemini API key from Google AI Studio.
+2. Inside the `/backend` folder, copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+3. Paste your API key into the `.env` file (`GEMINI_API_KEY="..."`).
+
+*(Note: If you skip this, the proxy will run in Mock Mode).*
+
+### 3. Run the Services (3 Terminals)
+
+**Terminal 1: Start the Stadium Telemetry Generator**
+Simulates 50,000+ users generating live density and concession wait-time spikes.
+```bash
+cd backend
+python mock_generator.py
+```
+
+**Terminal 2: Start the Gemini AI Proxy**
+Bootstraps the Flask server that handles Function Calling.
+```bash
+cd backend
+python server.py
+```
+
+**Terminal 3: Start the Frontend PWA**
+Run a simple HTTP server to serve the HTML/JS application securely.
+```bash
+cd public
+python -m http.server 8000
+```
+Open your browser and navigate to `http://localhost:8000`.
+
 ## 📜 Accessibility & Inclusion
 Built with **WCAG 2.1 AA** compliance:
 - High-contrast "Calm UI" for high-glare stadium environments.

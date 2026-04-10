@@ -109,27 +109,45 @@ document.getElementById('toggle-contrast').addEventListener('click', () => {
   document.body.classList.toggle('high-contrast');
 });
 
-document.getElementById('btn-send').addEventListener('click', () => {
+document.getElementById('btn-send').addEventListener('click', async () => {
   const input = document.getElementById('chat-input').value;
   if (!input) return;
   
   addChatMessage(input, 'user');
   document.getElementById('chat-input').value = '';
   
-  // Simulate Gemini API response and agentic routing for MVP testing
-  setTimeout(() => {
-    addChatMessage('Checking concessions using PALO routing...', 'system');
+  try {
+    const response = await fetch('http://localhost:5000/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: input })
+    });
     
-    // Simulate PALO result
-    setTimeout(() => {
-      document.getElementById('routing-section').classList.remove('hidden');
-      document.getElementById('route-details').innerHTML = `
-        <p><strong>Option 1 (Fastest Arrival):</strong> South Kiosk</p>
-        <p>Walk: 4 mins | Predicted Wait: 2 mins | Score: 360</p>
-        <button>Place Order via Wallet</button>
-      `;
-    }, 1500);
-  }, 500);
+    const data = await response.json();
+    
+    if (data.type === "text") {
+      addChatMessage(data.reply, 'system');
+    } else if (data.type === "function_call") {
+      addChatMessage(data.reply, 'system');
+      
+      if (data.function === "get_optimal_route") {
+        // Trigger PALO Simulation in UI
+        setTimeout(() => {
+          document.getElementById('routing-section').classList.remove('hidden');
+          document.getElementById('route-details').innerHTML = `
+            <p><strong>PALO Option 1 (Fastest Arrival):</strong> South Kiosk</p>
+            <p>Walk: 4 mins | Predicted Wait: 2 mins | Score: 360</p>
+            <button onclick="alert('Wallet pass pushed!')">Place Order via Wallet</button>
+          `;
+        }, 1000);
+      } else if (data.function === "place_order") {
+        addChatMessage("Successfully placed order and generated your Google Wallet pass!", "system");
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    addChatMessage("Error connecting to Gemini proxy. Is the python server running?", "system");
+  }
 });
 
 function addChatMessage(text, sender) {
