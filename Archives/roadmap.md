@@ -1,33 +1,53 @@
-# Project Roadmap: SwiftSeat (The "Dijkstra" Architecture)
+# Project Roadmap: SwiftSeat (The "Gemini-First" Architecture)
 
 ## Phase 1: Research & Discovery (Completed)
 - [x] Identify core pain points in large-scale sporting events.
 - [x] Analyze existing technology solutions.
 - [x] Define optimal system architecture (Zero-Friction NFC, Edge Compute, HTTP/3, Time-Dependent Graphs).
+- [x] Efficiency audit: Pivot from "Dijkstra Architecture" to "Gemini-First Architecture" for hackathon alignment.
+- [x] Design PALO scoring algorithm (Predictive Arrival-time, Load-balanced Optimization).
 
-## Phase 2: Design & Prototyping (Current)
-- [ ] Define MVP feature set (Zero-download PWA, Predictive AI push, Dynamic flow routing).
-- [ ] Design Firestore data schema for Time-Dependent Graphs (Nodes and Edges with density weights).
-- [ ] Prototype UI/UX for NFC "Instant App" popups (Apple App Clips / Android Instant Apps).
-- [ ] Set up initial project scaffolding for a lightweight PWA/Next.js frontend.
+## Phase 2: Foundation & Setup (Current)
+- [ ] Create GCP project. Enable: Maps JS API, Compute Route Matrix, Gemini API, Firestore, Cloud Functions, FCM.
+- [ ] Create Firebase project linked to GCP.
+- [ ] Scaffold vanilla PWA frontend (`index.html`, `styles.css`, `app.js`, `manifest.json`, `sw.js`).
+- [ ] Design Firestore schema: `/Events/{eventId}/Zones`, `/Concessions`, `/Orders`, `/RoutingLog`.
+- [ ] Create stadium SVG overlay with mapped zone IDs.
 
-## Phase 3: Infrastructure & Backend Development
-- [ ] Provision Google Cloud APIs (Vertex AI TiDE, Pub/Sub, Dataflow).
-- [ ] Establish simulated Edge Compute backend (mocking low-latency local processing).
-- [ ] Implement mock telemetry generator (Python) pushing UDP/HTTP/3 mocked payloads.
-- [ ] Build stream processing pipeline (Dataflow) to aggregate zone density into live graph weights.
+## Phase 3: Mock Data & Heatmap
+- [ ] Write Python mock data generator (`mock_generator.py`) — writes density + wait time data to Firestore with time-series trend.
+- [ ] Implement real-time heatmap rendering (Firestore snapshot listeners → SVG zone color updates).
+- [ ] Validate heatmap updates live with mock data running.
 
-## Phase 4: Core Engine Development (The Flow & AI)
-- [ ] Build the Time-Dependent Routing Engine (Dijkstra/A* with dynamic edge weights).
-- [ ] Implement Anticipatory AI (Vertex AI) to generate push triggers before halftime.
-- [ ] Develop the NFC-to-Order pipeline (Seat QR/NFC -> PWA -> Google/Apple Pay).
+## Phase 4: PALO Algorithm & Smart Routing
+- [ ] Implement PALO scoring engine in `app.js`:
+  - Fetch walk times via Google Maps Compute Route Matrix.
+  - Fetch current wait times + trend from Firestore.
+  - Predict wait-at-arrival using linear trend extrapolation.
+  - Apply load-balancing penalty from `/RoutingLog`.
+  - Rank concession stands by composite PALO score.
+- [ ] Integrate routing results with Google Maps visual directions on the stadium overlay.
+- [ ] Log each routing recommendation to Firestore `/RoutingLog` for load-balancing feedback.
 
-## Phase 5: Testing & Optimization
-- [ ] Test HTTP/3 / WebRTC data channel degradation under simulated packet loss.
-- [ ] Conduct accessibility audit (WCAG 2.1 AA, high contrast).
-- [ ] Perform stress testing for predictive flow accuracy.
+## Phase 5: Gemini AI Concierge
+- [ ] Deploy Gemini proxy Cloud Function (keeps API key server-side).
+- [ ] Define function declarations for Gemini tool use:
+  - `get_nearby_concessions(user_location, food_type)`
+  - `get_optimal_route(user_location, destination)` — uses PALO internally
+  - `place_order(vendor_id, items, user_id)`
+  - `get_zone_density(zone_id)`
+- [ ] Build conversational chat UI (text + image input).
+- [ ] Demonstrate end-to-end agentic flow: "I'm hungry" → PALO routing → order placement → wallet voucher.
 
-## Phase 6: Submission & Demo
-- [ ] Finalize documentation and README.
-- [ ] Record end-to-end "Zero Friction" demo video.
-- [ ] Prepare final pitch emphasizing the mathematical superiority of the architecture.
+## Phase 6: Wallet, Safety & Offline
+- [ ] Implement Google Wallet pass creation via Cloud Function (EventTicketObject + concession voucher).
+- [ ] Implement FCM density alerting pipeline (Cloud Function monitors Firestore zones, pushes alert if density > threshold).
+- [ ] Build emergency UI mode (strip all commercial UI, show high-contrast escape route).
+- [ ] Implement service worker for offline-first caching (map, ticket, queued orders).
+
+## Phase 7: Polish & Submit
+- [ ] Accessibility pass: WCAG 2.1 AA, high-contrast toggle, ARIA labels, TTS route narration.
+- [ ] Google Translate API integration for multilingual Gemini responses.
+- [ ] Final README with architecture diagram and PALO algorithm explanation.
+- [ ] Record end-to-end demo video.
+- [ ] Verify repo size < 1MB. Submit.
