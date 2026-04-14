@@ -1,49 +1,124 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" style="font-family: 'Inter', sans-serif;">
   <defs>
+    <radialGradient id="pitchGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a4a1a"/>
+      <stop offset="100%" stop-color="#0d2e0d"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
     <style>
-      .corridor { fill: #2a2a2a; stroke: #444; stroke-width: 2; }
-      .stand { fill: #1a1a1a; stroke: #555; stroke-width: 1; }
-      .pitch { fill: #143314; stroke: #fff; stroke-width: 2; }
-      .zone { transition: fill 0.5s ease; }
+      .zone { transition: fill 0.6s ease, opacity 0.4s ease; fill: #1c2333; opacity: 0.9; }
+      .zone-safe     { fill: #00c896 !important; opacity: 0.80; }
+      .zone-warning  { fill: #f5ba42 !important; opacity: 0.80; }
+      .zone-critical { fill: #ff4d6d !important; opacity: 0.90; }
+      .zone-label { fill: #6b7fa3; font-size: 10px; font-weight: 500; pointer-events: none; }
+      .stand-outline { fill: #111827; stroke: #2a3550; stroke-width: 1.5; }
+      .corridor-line { stroke: #1e2d44; stroke-width: 1; fill: none; }
+      .vendor-dot { fill: #4f8ef7; cursor: pointer; transition: r 0.2s ease; filter: url(#glow); }
+      .vendor-dot:hover { r: 10; }
+      .vendor-label { fill: #c9d4f0; font-size: 9px; font-weight: 600; pointer-events: none; }
     </style>
   </defs>
 
-  <!-- Pitch -->
-  <rect class="pitch" x="250" y="200" width="300" height="200" rx="20"/>
+  <!-- Background -->
+  <rect width="800" height="560" fill="#0a0e18" rx="12"/>
 
-  <!-- North Zones -->
-  <g id="zone_north_1" class="zone">
-    <rect class="corridor" x="100" y="50" width="600" height="100"/>
-    <text x="350" y="105" fill="#fff" font-family="sans-serif">North Concourse (Zone N1)</text>
+  <!-- Pitch (centre field) -->
+  <ellipse cx="400" cy="280" rx="155" ry="105" fill="url(#pitchGrad)" stroke="#2a5a2a" stroke-width="1.5"/>
+  <!-- Centre circle -->
+  <circle cx="400" cy="280" r="36" fill="none" stroke="#1e4a1e" stroke-width="1" stroke-dasharray="3 2"/>
+  <!-- Centre dot -->
+  <circle cx="400" cy="280" r="3" fill="#2a5a2a"/>
+  <!-- Goal lines -->
+  <line x1="262" y1="256" x2="262" y2="304" stroke="#2a5a2a" stroke-width="1"/>
+  <line x1="538" y1="256" x2="538" y2="304" stroke="#2a5a2a" stroke-width="1"/>
+  <!-- Halfway line -->
+  <line x1="400" y1="175" x2="400" y2="385" stroke="#1e4a1e" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- Stands (seating banks) -->
+  <rect class="stand-outline" x="200" y="155" width="400" height="42" rx="3"/>
+  <rect class="stand-outline" x="200" y="363" width="400" height="42" rx="3"/>
+  <rect class="stand-outline" x="105" y="190" width="62" height="180" rx="3"/>
+  <rect class="stand-outline" x="633" y="190" width="62" height="180" rx="3"/>
+
+  <!-- Seating rows (north) -->
+  <line x1="205" y1="165" x2="595" y2="165" stroke="#1e2d44" stroke-width="0.8"/>
+  <line x1="205" y1="172" x2="595" y2="172" stroke="#1e2d44" stroke-width="0.8"/>
+  <line x1="205" y1="179" x2="595" y2="179" stroke="#1e2d44" stroke-width="0.8"/>
+  <line x1="205" y1="186" x2="595" y2="186" stroke="#1e2d44" stroke-width="0.8"/>
+
+  <!-- Seating rows (south) -->
+  <line x1="205" y1="373" x2="595" y2="373" stroke="#1e2d44" stroke-width="0.8"/>
+  <line x1="205" y1="380" x2="595" y2="380" stroke="#1e2d44" stroke-width="0.8"/>
+  <line x1="205" y1="387" x2="595" y2="387" stroke="#1e2d44" stroke-width="0.8"/>
+  <line x1="205" y1="394" x2="595" y2="394" stroke="#1e2d44" stroke-width="0.8"/>
+
+  <!-- CONCOURSE ZONES (interactive / heatmap targets) -->
+  <!-- North Concourse -->
+  <g id="zone_north_1" class="zone" role="img" aria-label="North concourse crowd density">
+    <rect x="158" y="60" width="484" height="88" rx="8"/>
+    <text class="zone-label" x="392" y="107" text-anchor="middle">North Concourse · Zone N1</text>
   </g>
-  <rect class="stand" x="150" y="150" width="500" height="50" rx="5"/>
 
-  <!-- South Zones -->
-  <g id="zone_south_1" class="zone">
-    <rect class="corridor" x="100" y="450" width="600" height="100"/>
-    <text x="350" y="505" fill="#fff" font-family="sans-serif">South Concourse (Zone S1)</text>
+  <!-- South Concourse -->
+  <g id="zone_south_1" class="zone" role="img" aria-label="South concourse crowd density">
+    <rect x="158" y="412" width="484" height="88" rx="8"/>
+    <text class="zone-label" x="392" y="459" text-anchor="middle">South Concourse · Zone S1</text>
   </g>
-  <rect class="stand" x="150" y="400" width="500" height="50" rx="5"/>
 
-  <!-- East Zones -->
-  <g id="zone_east_1" class="zone">
-    <rect class="corridor" x="650" y="200" width="100" height="200"/>
-    <text x="660" y="300" fill="#fff" font-family="sans-serif" transform="rotate(90 660,300)">East (E1)</text>
+  <!-- East Concourse -->
+  <g id="zone_east_1" class="zone" role="img" aria-label="East concourse crowd density">
+    <rect x="700" y="155" width="74" height="250" rx="8"/>
+    <text class="zone-label" x="737" y="282" text-anchor="middle" transform="rotate(90 737 282)">East · E1</text>
   </g>
-  <rect class="stand" x="550" y="200" width="50" height="200" rx="5"/>
 
-  <!-- West Zones -->
-  <g id="zone_west_1" class="zone">
-    <rect class="corridor" x="50" y="200" width="100" height="200"/>
-    <text x="90" y="300" fill="#fff" font-family="sans-serif" transform="rotate(-90 90,300)">West (W1)</text>
+  <!-- West Concourse -->
+  <g id="zone_west_1" class="zone" role="img" aria-label="West concourse crowd density">
+    <rect x="26" y="155" width="74" height="250" rx="8"/>
+    <text class="zone-label" x="63" y="282" text-anchor="middle" transform="rotate(-90 63 282)">West · W1</text>
   </g>
-  <rect class="stand" x="200" y="200" width="50" height="200" rx="5"/>
 
-  <!-- Vendor Locations -->
-  <circle id="vendor_north_7" cx="200" cy="100" r="15" fill="#0f62fe"/>
-  <text x="225" y="105" fill="#fff" font-size="12">North Grill</text>
+  <!-- Corner zones -->
+  <g id="zone_nw_corner" class="zone">
+    <rect x="26" y="60" width="126" height="90" rx="8"/>
+    <text class="zone-label" x="89" y="108" text-anchor="middle">NW</text>
+  </g>
+  <g id="zone_ne_corner" class="zone">
+    <rect x="648" y="60" width="126" height="90" rx="8"/>
+    <text class="zone-label" x="711" y="108" text-anchor="middle">NE</text>
+  </g>
+  <g id="zone_sw_corner" class="zone">
+    <rect x="26" y="410" width="126" height="90" rx="8"/>
+    <text class="zone-label" x="89" y="458" text-anchor="middle">SW</text>
+  </g>
+  <g id="zone_se_corner" class="zone">
+    <rect x="648" y="410" width="126" height="90" rx="8"/>
+    <text class="zone-label" x="711" y="458" text-anchor="middle">SE</text>
+  </g>
 
-  <circle id="vendor_south_3" cx="600" cy="500" r="15" fill="#0f62fe"/>
-  <text x="625" y="505" fill="#fff" font-size="12">South Kiosk</text>
+  <!-- VENDOR LOCATIONS -->
+  <!-- North Grill -->
+  <circle id="vendor_north_7" class="vendor-dot" cx="290" cy="100" r="7"/>
+  <text class="vendor-label" x="302" y="104">North Grill</text>
 
+  <!-- South Kiosk -->
+  <circle id="vendor_south_3" class="vendor-dot" cx="510" cy="454" r="7"/>
+  <text class="vendor-label" x="522" y="458">South Kiosk</text>
+
+  <!-- East Café -->
+  <circle id="vendor_east_2" class="vendor-dot" cx="737" cy="270" r="7"/>
+  <text class="vendor-label" x="748" y="274">East Café</text>
+
+  <!-- Compass Rose (decorative) -->
+  <g transform="translate(748 510)" opacity="0.35">
+    <circle r="16" fill="#1c2333" stroke="#2a3550" stroke-width="1"/>
+    <text y="-6" text-anchor="middle" font-size="8" fill="#6b7fa3" font-weight="700">N</text>
+    <text y="13" text-anchor="middle" font-size="8" fill="#6b7fa3">S</text>
+    <text x="-12" y="4" text-anchor="middle" font-size="8" fill="#6b7fa3">W</text>
+    <text x="12" y="4" text-anchor="middle" font-size="8" fill="#6b7fa3">E</text>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#2a3550" stroke-width="0.8"/>
+    <line x1="-10" y1="0" x2="10" y2="0" stroke="#2a3550" stroke-width="0.8"/>
+  </g>
 </svg>

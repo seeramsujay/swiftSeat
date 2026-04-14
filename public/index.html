@@ -3,65 +3,294 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SwiftSeat: Smart Venue Assistant</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>SwiftSeat — Smart Venue Assistant</title>
+  <meta name="description" content="AI-powered stadium concierge. Beat crowds, find food faster, and enjoy the game with SwiftSeat.">
+  <meta name="theme-color" content="#07090f">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0d0d0d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Emergency Escape Overlay -->
-  <div id="emergency-mode" class="hidden">
-    <h1>🚨 EMERGENCY: EVACUATE 🚨</h1>
-    <p>Follow the high-contrast arrow to safety.</p>
-    <div class="escape-arrow">⬇️</div>
+
+  <!-- ===== EMERGENCY OVERLAY ===== -->
+  <div id="emergency-mode" class="hidden" role="alertdialog" aria-modal="true" aria-label="Emergency evacuation alert">
+    <div class="emergency-inner">
+      <div class="emergency-pulse"></div>
+      <div class="emergency-icon">🚨</div>
+      <h1>EVACUATE NOW</h1>
+      <p>Follow the lit arrow to the nearest exit. Walk calmly and move quickly.</p>
+      <div class="escape-arrow" aria-hidden="true">↓</div>
+      <button id="emergency-dismiss" class="btn-emergency-dismiss">✓ I'm Safe — Dismiss</button>
+    </div>
   </div>
 
-  <div id="app-container">
-    <header class="top-nav">
-      <h2>SwiftSeat</h2>
-      <button id="toggle-contrast" aria-label="Toggle High Contrast">🌓</button>
-    </header>
+  <!-- ===== TOAST ===== -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <main class="content">
-      <section id="chat-section">
-        <div id="chat-history" aria-live="polite">
-          <div class="message system">
-            Hello! I'm your Gemini Stadium Concierge. Try saying "I want a burger" or ask about wait times.
+  <!-- ===== MAIN SHELL ===== -->
+  <div id="shell">
+
+    <!-- ── SIDEBAR ── -->
+    <aside id="sidebar" aria-label="Navigation">
+      <div class="sidebar-brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="url(#blt)" stroke="none"/>
+            <defs>
+              <linearGradient id="blt" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#4f8ef7"/>
+                <stop offset="100%" stop-color="#00e5b0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="brand-name">SwiftSeat</span>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main navigation">
+        <button class="nav-item active" id="nav-concierge" data-panel="panel-chat" aria-current="page" title="AI Concierge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Concierge</span>
+        </button>
+        <button class="nav-item" id="nav-heatmap" data-panel="panel-heatmap" title="Live Heatmap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Heatmap</span>
+        </button>
+        <button class="nav-item" id="nav-routing" data-panel="panel-routing" title="PALO Routing">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Routing</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="conn-pill" id="conn-pill" title="Backend connection status">
+          <span class="conn-dot" id="conn-dot"></span>
+          <span id="conn-label">Offline</span>
+        </div>
+        <button class="icon-btn" id="toggle-contrast" aria-label="Toggle high contrast mode" title="High Contrast">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── CONTENT AREA ── -->
+    <div id="content-area">
+
+      <!-- ══════════════════════════════════
+           PANEL: AI CONCIERGE CHAT
+           ══════════════════════════════════ -->
+      <section id="panel-chat" class="panel active" aria-label="Gemini AI Concierge">
+        <div class="panel-topbar">
+          <div class="topbar-left">
+            <div class="gemini-orb" aria-hidden="true">
+              <span class="orb-letter">G</span>
+            </div>
+            <div>
+              <h1 class="topbar-title">Gemini Concierge</h1>
+              <span class="topbar-sub" id="gemini-status">Ready to help</span>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <div class="mobile-conn-pill" id="mobile-conn-pill">
+              <span class="conn-dot" id="mobile-conn-dot"></span>
+            </div>
           </div>
         </div>
-        <div id="chat-input-bar">
-          <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
-          <input type="text" id="chat-input" placeholder="Type or speak a request..." aria-label="Chat input">
-          <button id="btn-camera" aria-label="Upload photo">📷</button>
-          <button id="btn-send" aria-label="Send message">Send</button>
+
+        <div class="chat-body" id="chat-history" aria-live="polite" aria-relevant="additions">
+          <!-- Welcome message -->
+          <div class="msg-row ai" role="listitem">
+            <div class="msg-avatar ai-avatar" aria-hidden="true">G</div>
+            <div class="msg-content">
+              <div class="msg-bubble ai-bubble">
+                <p>Hi! I'm your AI stadium assistant powered by <strong>Gemini</strong>.</p>
+                <p>Try saying <em>"I want a burger"</em> or <em>"find me food near West Gate"</em> and I'll use the <strong>PALO algorithm</strong> to route you to the fastest stand. 🏟️</p>
+              </div>
+              <div class="msg-chips">
+                <button class="chip" data-prompt="I want a burger">🍔 Burger</button>
+                <button class="chip" data-prompt="I want a drink">🥤 Drink</button>
+                <button class="chip" data-prompt="Find me snacks">🍿 Snacks</button>
+                <button class="chip" data-prompt="I need step-free access route">♿ Accessible</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Route card (shows after routing) -->
+        <div id="route-card" class="route-card hidden" role="region" aria-label="PALO optimal route recommendation">
+          <div class="route-card-top">
+            <div class="route-badge-wrap">
+              <span class="route-badge">PALO Route</span>
+              <span class="route-badge-sub" id="route-score-label"></span>
+            </div>
+            <button class="route-close" id="route-close" aria-label="Dismiss route card">✕</button>
+          </div>
+          <div id="route-details"></div>
+        </div>
+
+        <div class="chat-input-area">
+          <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" aria-hidden="true">
+          <div id="image-preview-bar" class="image-preview-bar hidden">
+            <img id="image-preview-thumb" src="" alt="Attached image preview" class="preview-thumb">
+            <span class="preview-label">📷 Image attached</span>
+            <button id="btn-clear-image" class="btn-clear-image" aria-label="Remove attached image">✕</button>
+          </div>
+          <div class="chat-input-row">
+            <button id="btn-camera" class="icon-btn cam-btn" aria-label="Attach a photo for visual positioning" title="Attach photo">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </button>
+            <input type="text" id="chat-input" class="chat-input" placeholder="Ask me anything…" aria-label="Message input" autocomplete="off" spellcheck="false">
+            <button id="btn-send" class="btn-send" aria-label="Send message">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
         </div>
       </section>
 
-      <!-- Heatmap / Visualizer -->
-      <section id="map-section">
-        <h3>Live Venue Heatmap</h3>
-        <div id="heatmap-container">
-          <object data="assets/stadium.svg" type="image/svg+xml" id="stadium-svg" aria-label="Live density map of the stadium">
-            <!-- Fallback text for screen readers -->
-            Stadium heatmap displaying crowd density in concourse zones.
+      <!-- ══════════════════════════════════
+           PANEL: LIVE HEATMAP
+           ══════════════════════════════════ -->
+      <section id="panel-heatmap" class="panel" aria-label="Live Venue Heatmap">
+        <div class="panel-topbar">
+          <div class="topbar-left">
+            <h1 class="topbar-title">Live Venue Map</h1>
+            <span class="topbar-sub" id="map-update-label">Updating live…</span>
+          </div>
+          <div class="topbar-right legend" aria-label="Density legend">
+            <span class="legend-item"><span class="legend-dot safe"></span>Clear</span>
+            <span class="legend-item"><span class="legend-dot warn"></span>Busy</span>
+            <span class="legend-item"><span class="legend-dot crit"></span>Crowded</span>
+          </div>
+        </div>
+
+        <div id="heatmap-container" role="img" aria-label="Live stadium crowd density heatmap">
+          <object data="assets/stadium.svg" type="image/svg+xml" id="stadium-svg" aria-hidden="true">
+            Stadium heatmap showing crowd density across all concourse zones.
           </object>
         </div>
+
+        <div class="stats-row" aria-label="Live venue statistics">
+          <div class="stat-tile" id="stat-density">
+            <span class="stat-val">—</span>
+            <span class="stat-lbl">Avg Density</span>
+            <span class="stat-unit">p/m²</span>
+          </div>
+          <div class="stat-tile" id="stat-wait">
+            <span class="stat-val">—</span>
+            <span class="stat-lbl">Best Wait</span>
+            <span class="stat-unit">mins</span>
+          </div>
+          <div class="stat-tile" id="stat-capacity">
+            <span class="stat-val">—</span>
+            <span class="stat-lbl">Capacity</span>
+            <span class="stat-unit">level</span>
+          </div>
+          <div class="stat-tile danger-tile hidden" id="stat-alert">
+            <span class="stat-val">!</span>
+            <span class="stat-lbl">Zone Alert</span>
+            <span class="stat-unit">active</span>
+          </div>
+        </div>
       </section>
 
-      <!-- PALO Recommended Routing -->
-      <section id="routing-section" class="hidden">
-        <h3>Optimal Route</h3>
-        <div id="route-details"></div>
-      </section>
-    </main>
-  </div>
+      <!-- ══════════════════════════════════
+           PANEL: PALO ROUTING
+           ══════════════════════════════════ -->
+      <section id="panel-routing" class="panel" aria-label="PALO Smart Routing">
+        <div class="panel-topbar">
+          <div class="topbar-left">
+            <h1 class="topbar-title">Smart Routing</h1>
+            <span class="topbar-sub">PALO Algorithm — Predictive Arrival-time, Load-balanced Optimization</span>
+          </div>
+        </div>
 
-  <!-- Scripts -->
-  <!-- Firebase App (the core Firebase SDK) -->
+        <div class="routing-body">
+          <!-- Filter Controls -->
+          <div class="filter-section">
+            <p class="filter-label">What are you looking for?</p>
+            <div class="filter-chips">
+              <button class="filter-chip active" data-food="">🍽️ All</button>
+              <button class="filter-chip" data-food="burgers">🍔 Burgers</button>
+              <button class="filter-chip" data-food="snacks">🍿 Snacks</button>
+              <button class="filter-chip" data-food="drinks">🥤 Drinks</button>
+            </div>
+            <div class="filter-toggle-row">
+              <label class="toggle-label" for="accessible-toggle">
+                <input type="checkbox" id="accessible-toggle" class="toggle-input">
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                ♿ Step-free routes only
+              </label>
+            </div>
+          </div>
+
+          <!-- Results -->
+          <div id="routing-results" class="routing-results">
+            <div class="routing-placeholder">
+              <div class="placeholder-icon">🗺️</div>
+              <p>Select a food category above to see live PALO rankings for all concession stands.</p>
+              <button class="btn-primary" id="btn-run-palo">Calculate Best Routes</button>
+            </div>
+          </div>
+
+          <!-- PALO Explainer -->
+          <details class="palo-explainer">
+            <summary>How does PALO work?</summary>
+            <div class="explainer-body">
+              <p>The <strong>PALO algorithm</strong> (Predictive Arrival-time, Load-balanced Optimization) scores each concession stand using three factors:</p>
+              <div class="explainer-grid">
+                <div class="explainer-item">
+                  <span class="explainer-icon">🚶</span>
+                  <div>
+                    <strong>Walk Time</strong>
+                    <p>Your real walking distance to each stand.</p>
+                  </div>
+                </div>
+                <div class="explainer-item">
+                  <span class="explainer-icon">⏱️</span>
+                  <div>
+                    <strong>Predicted Wait</strong>
+                    <p>Queue wait when you <em>arrive</em>, factoring current trend direction.</p>
+                  </div>
+                </div>
+                <div class="explainer-item">
+                  <span class="explainer-icon">⚖️</span>
+                  <div>
+                    <strong>Load Penalty</strong>
+                    <p>Avoids routing everyone to the same stand (prevents herd effect).</p>
+                  </div>
+                </div>
+              </div>
+              <code class="formula">score = walk_time + predicted_wait + load_penalty</code>
+              <p class="formula-note">Lower score = faster total experience. ✓</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+    </div><!-- /#content-area -->
+  </div><!-- /#shell -->
+
+  <!-- Mobile bottom nav (shown only <768px) -->
+  <nav id="mobile-nav" aria-label="Mobile navigation">
+    <button class="mnav-item active" data-panel="panel-chat" id="mnav-chat">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Chat</span>
+    </button>
+    <button class="mnav-item" data-panel="panel-heatmap" id="mnav-heatmap">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <span>Map</span>
+    </button>
+    <button class="mnav-item" data-panel="panel-routing" id="mnav-routing">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span>Routes</span>
+    </button>
+  </nav>
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <!-- Firestore -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  
   <script src="app.js"></script>
 </body>
 </html>
