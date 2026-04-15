@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftSeat Vendor — Store Dashboard</title>
+  <meta name="description" content="SwiftSeat Vendor Panel — manage your queue, monitor wait times, and fulfil AI-placed orders.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #07090f;
+      --bg-2:    #0d1117;
+      --bg-3:    #111827;
+      --surface: rgba(255,255,255,0.04);
+      --s2:      rgba(255,255,255,0.07);
+      --border:  rgba(255,255,255,0.07);
+      --b2:      rgba(255,255,255,0.13);
+      --primary: #4f8ef7;
+      --p-dim:   rgba(79,142,247,0.12);
+      --p-glow:  rgba(79,142,247,0.2);
+      --accent:  #00e5b0;
+      --safe:    #00c896;
+      --warn:    #f5ba42;
+      --danger:  #ff4d6d;
+      --text:    #eef0f6;
+      --t2:      #8b95b0;
+      --t3:      #454e66;
+      --font:    'Inter', system-ui, sans-serif;
+      --r:       12px; --r-sm: 8px; --r-xs: 6px;
+      --ease:    cubic-bezier(0.4,0,0.2,1); --dur: 200ms;
+    }
+    html, body { height: 100%; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); overflow: hidden; -webkit-font-smoothing: antialiased; }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--b2); border-radius: 99px; }
+
+    /* ── Shell ── */
+    #shell { display: grid; grid-template-rows: 64px 1fr; height: 100vh; }
+
+    /* ── Topbar ── */
+    #topbar {
+      background: rgba(7,9,15,0.9);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; backdrop-filter: blur(20px); z-index: 50;
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon { font-size: 24px; }
+    .brand-title { font-size: 16px; font-weight: 800; letter-spacing: -0.4px; }
+    .brand-sub    { font-size: 11px; color: var(--t2); font-weight: 400; }
+    .store-selector {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: var(--t2);
+    }
+    select.store-select {
+      background: var(--bg-3); border: 1px solid var(--b2);
+      color: var(--text); font-family: var(--font); font-size: 13px;
+      padding: 7px 12px; border-radius: var(--r-sm); outline: none;
+      cursor: pointer; transition: border-color var(--dur);
+    }
+    select.store-select:hover { border-color: var(--primary); }
+    .status-ring { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+    .ring-dot { width: 8px; height: 8px; border-radius: 50%; animation: ringPulse 2s ease infinite; }
+    @keyframes ringPulse {
+      0%,100% { box-shadow: 0 0 0 0 currentColor; }
+      50%      { box-shadow: 0 0 0 4px rgba(0,200,150,0); }
+    }
+    .ring-online  { background: var(--safe); color: var(--safe); }
+    .ring-offline { background: var(--danger); color: var(--danger); animation: none; }
+    #clock { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); }
+
+    /* ── Layout ── */
+    #main { display: grid; grid-template-columns: 320px 1fr; overflow: hidden; }
+
+    /* ── Left column ── */
+    #col-left { background: var(--bg-2); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+
+    /* Stats block */
+    .stats-block { padding: 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .queue-hero { margin-bottom: 16px; }
+    .queue-hero-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--t2); margin-bottom: 8px; }
+    .queue-hero-num { font-size: 72px; font-weight: 800; letter-spacing: -4px; line-height: 1; }
+    .queue-hero-sub { font-size: 13px; color: var(--t2); margin-top: 4px; }
+    .mini-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .mini-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 12px; }
+    .mini-stat-val { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+    .mini-stat-lbl { font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+
+    /* Wait time bar */
+    .wait-bar-section { padding: 0 20px 20px; flex-shrink: 0; }
+    .wbs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; }
+    .wbs-title { font-weight: 600; color: var(--t2); }
+    .wbs-value { font-weight: 700; font-size: 16px; }
+    .wait-track { height: 8px; background: var(--surface); border-radius: 99px; overflow: hidden; }
+    .wait-fill  { height: 100%; border-radius: 99px; transition: width 0.8s var(--ease); }
+    .fill-safe { background: linear-gradient(90deg, var(--safe), var(--accent)); }
+    .fill-warn { background: linear-gradient(90deg, var(--warn), #ffd06b); }
+    .fill-bad  { background: linear-gradient(90deg, var(--danger), #ff8fa3); }
+
+    /* Override section */
+    .override-section { padding: 16px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .override-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--t2); margin-bottom: 10px; }
+    .override-row { display: flex; gap: 8px; }
+    .override-input {
+      flex: 1; background: var(--bg-3); border: 1px solid var(--b2); color: var(--text);
+      font-family: var(--font); font-size: 13px; padding: 9px 12px;
+      border-radius: var(--r-sm); outline: none; transition: border-color var(--dur);
+    }
+    .override-input:focus { border-color: var(--primary); }
+    .btn { padding: 9px 18px; border: none; border-radius: var(--r-sm); font-family: var(--font); font-weight: 600; font-size: 13px; cursor: pointer; transition: all var(--dur) var(--ease); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), #3a78e8); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-safe    { background: rgba(0,200,150,0.15); border: 1px solid rgba(0,200,150,0.3); color: var(--safe); }
+    .btn-safe:hover { background: rgba(0,200,150,0.25); }
+    .btn-danger  { background: rgba(255,77,109,0.12); border: 1px solid rgba(255,77,109,0.3); color: var(--danger); }
+    .btn-danger:hover { background: rgba(255,77,109,0.22); }
+    .btn-sm { padding: 7px 14px; font-size: 12px; }
+
+    /* ── Right column — orders ── */
+    #col-right { display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+
+    .orders-header {
+      padding: 18px 24px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0; background: var(--bg-2);
+    }
+    .orders-title { font-size: 15px; font-weight: 700; }
+    .orders-badge {
+      background: var(--primary); color: #fff;
+      border-radius: 99px; font-size: 11px; font-weight: 700;
+      padding: 3px 9px; min-width: 22px; text-align: center;
+    }
+    .orders-actions { display: flex; gap: 8px; }
+
+    .orders-body { flex: 1; overflow-y: auto; padding: 16px 24px; display: flex; flex-direction: column; gap: 10px; }
+
+    .order-card {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 16px 18px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 12px; align-items: center;
+      transition: border-color var(--dur), background var(--dur);
+      animation: orderIn 0.3s var(--ease) both;
+    }
+    @keyframes orderIn {
+      from { opacity: 0; transform: translateX(12px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .order-card:hover { border-color: var(--b2); background: var(--bg-3); }
+    .order-card.completed { opacity: 0.4; pointer-events: none; }
+
+    .order-num { font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--t2); }
+    .order-item { font-size: 16px; font-weight: 700; margin-top: 2px; letter-spacing: -0.3px; }
+    .order-seat { font-size: 12px; color: var(--t2); margin-top: 3px; }
+    .order-time { font-size: 11px; color: var(--t3); margin-top: 6px; }
+    .order-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .order-card.is-urgent { border-color: rgba(245,186,66,0.25); background: rgba(245,186,66,0.03); }
+    .urgent-badge { font-size: 10px; font-weight: 700; color: var(--warn); background: rgba(245,186,66,0.1); padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
+
+    .empty-orders { text-align: center; padding: 80px 20px; color: var(--t2); }
+    .empty-orders .icon { font-size: 48px; margin-bottom: 14px; }
+    .empty-orders p { font-size: 14px; line-height: 1.6; }
+
+    /* Filter bar */
+    .filter-bar {
+      padding: 12px 24px; border-bottom: 1px solid var(--border);
+      display: flex; gap: 6px; flex-shrink: 0;
+    }
+    .filter-pill {
+      padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      background: var(--surface); border: 1px solid var(--border); color: var(--t2);
+      cursor: pointer; transition: all var(--dur);
+    }
+    .filter-pill.active { background: var(--p-dim); border-color: rgba(79,142,247,0.25); color: var(--primary); }
+    .filter-pill:hover:not(.active) { background: var(--s2); color: var(--text); }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 20px; right: 20px;
+      background: var(--bg-3); border: 1px solid var(--b2);
+      color: var(--text); font-size: 13px; font-weight: 500;
+      padding: 10px 18px; border-radius: var(--r-sm);
+      opacity: 0; pointer-events: none;
+      transition: all 0.25s var(--ease);
+      backdrop-filter: blur(20px); z-index: 999;
+      transform: translateY(8px);
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+<div id="shell">
+
+  <!-- ─── TOPBAR ─── -->
+  <div id="topbar">
+    <div class="topbar-brand">
+      <span class="brand-icon">🍔</span>
+      <div>
+        <div class="brand-title" id="store-name">Loading…</div>
+        <div class="brand-sub">Vendor Operations · SwiftSeat</div>
+      </div>
+    </div>
+
+    <div class="store-selector">
+      <span>Stand:</span>
+      <select class="store-select" id="vendor-select" onchange="switchVendor(this.value)">
+        <option value="vendor_south_3">South Kiosk</option>
+        <option value="vendor_north_7">North Grill</option>
+        <option value="vendor_east_2">East Café</option>
+      </select>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="status-ring">
+        <div class="ring-dot ring-online" id="conn-ring"></div>
+        <span id="conn-label">Connected</span>
+      </div>
+      <span id="clock"></span>
+    </div>
+  </div>
+
+  <!-- ─── MAIN ─── -->
+  <div id="main">
+
+    <!-- Left: live stats + controls -->
+    <div id="col-left">
+      <div class="stats-block">
+        <div class="queue-hero">
+          <div class="queue-hero-label">People in Queue Right Now</div>
+          <div class="queue-hero-num" id="queue-num" style="color:var(--safe)">—</div>
+          <div class="queue-hero-sub" id="queue-trend">Loading…</div>
+        </div>
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <div class="mini-stat-val" id="m-wait">—</div>
+            <div class="mini-stat-lbl">Est. wait (min)</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val" id="m-pending" style="color:var(--warn)">—</div>
+            <div class="mini-stat-lbl">Pending orders</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wait-bar-section">
+        <div class="wbs-header">
+          <span class="wbs-title">Queue Load</span>
+          <span class="wbs-value" id="queue-pct">—%</span>
+        </div>
+        <div class="wait-track">
+          <div class="wait-fill fill-safe" id="queue-bar" style="width:0%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:6px">
+          <span>Empty</span><span>Full (30)</span>
+        </div>
+      </div>
+
+      <div class="override-section">
+        <div class="override-label">Manual Wait Override</div>
+        <div class="override-row">
+          <input type="number" class="override-input" id="override-input" placeholder="Wait time in seconds…" min="0" max="3600">
+          <button class="btn btn-primary" onclick="doOverride()">Set</button>
+        </div>
+        <div style="font-size:11px;color:var(--t3);margin-top:8px">⚙ Overrides the MQTT sensor reading temporarily.</div>
+      </div>
+    </div>
+
+    <!-- Right: live orders -->
+    <div id="col-right">
+      <div class="orders-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="orders-title">Live Orders</div>
+          <div class="orders-badge" id="order-count">0</div>
+        </div>
+        <div class="orders-actions">
+          <button class="btn btn-danger btn-sm" onclick="clearCompleted()">Clear Completed</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="filter-pill active" data-filter="all"     onclick="setFilter('all',this)">All</div>
+        <div class="filter-pill"        data-filter="pending" onclick="setFilter('pending',this)">Pending</div>
+        <div class="filter-pill"        data-filter="completed" onclick="setFilter('completed',this)">Completed</div>
+      </div>
+
+      <div class="orders-body" id="orders-body">
+        <div class="empty-orders"><div class="icon">🎉</div><p>No orders yet.<br>Orders placed by the Gemini AI and customers will appear here instantly.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const API = 'http://localhost:5000';
+let currentVendor = 'vendor_south_3';
+let _allOrders    = [];
+let _currentFilter = 'all';
+
+// ── Clock ──
+function updateClock() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ── Relative time ──
+function timeAgo(ts) {
+  const s = Math.round(Date.now()/1000 - ts);
+  if (s < 10)  return 'just now';
+  if (s < 60)  return `${s}s ago`;
+  if (s < 3600) return `${Math.floor(s/60)}m ago`;
+  return `${Math.floor(s/3600)}h ago`;
+}
+
+// ── Switch vendor ──
+function switchVendor(id) {
+  currentVendor = id;
+  _allOrders    = [];
+  refresh();
+}
+
+// ── Fetch vendor stats ──
+async function fetchStats() {
+  try {
+    const r = await fetch(`${API}/api/vendor/${currentVendor}`);
+    const d = await r.json();
+
+    const name    = d.name ?? currentVendor;
+    const qLen    = d.queueLength ?? 0;
+    const waitSec = d.estimatedWaitTime ?? 0;
+    const trend   = d.waitTrend ?? 0;
+    const pct     = Math.min(100, Math.round(qLen / 30 * 100));
+    const pending = d.pendingOrderCount ?? 0;
+
+    document.getElementById('store-name').textContent  = name;
+    document.title = `${name} — SwiftSeat Vendor`;
+    document.getElementById('queue-num').textContent   = qLen;
+    document.getElementById('m-wait').textContent      = Math.round(waitSec/60);
+    document.getElementById('m-pending').textContent   = pending;
+    document.getElementById('queue-pct').textContent   = `${pct}%`;
+
+    const bar = document.getElementById('queue-bar');
+    bar.style.width = `${pct}%`;
+    bar.className   = `wait-fill ${pct > 70 ? 'fill-bad' : pct > 40 ? 'fill-warn' : 'fill-safe'}`;
+
+    const qNum = document.getElementById('queue-num');
+    qNum.style.color = pct > 70 ? 'var(--danger)' : pct > 40 ? 'var(--warn)' : 'var(--safe)';
+
+    const trendText = trend > 0 ? `📈 Queue growing (+${trend.toFixed(1)}/min)`
+                    : trend < 0 ? `📉 Queue dropping (${trend.toFixed(1)}/min)`
+                    : '→ Queue stable';
+    document.getElementById('queue-trend').textContent = trendText;
+
+    // Connection indicator
+    document.getElementById('conn-ring').className  = 'ring-dot ring-online';
+    document.getElementById('conn-label').textContent = 'Live';
+
+  } catch(e) {
+    document.getElementById('conn-ring').className    = 'ring-dot ring-offline';
+    document.getElementById('conn-label').textContent = 'Offline';
+  }
+}
+
+// ── Fetch orders ──
+async function fetchOrders() {
+  try {
+    const r = await fetch(`${API}/api/vendor/${currentVendor}/orders`);
+    const d = await r.json();
+    _allOrders = d.orders ?? [];
+    renderOrders();
+    const pending = _allOrders.filter(o => o.status === 'pending').length;
+    document.getElementById('order-count').textContent = pending;
+  } catch(e) {
+    console.warn('[Orders]', e);
+  }
+}
+
+// ── Render orders ──
+function setFilter(f, el) {
+  _currentFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderOrders();
+}
+
+function renderOrders() {
+  const body = document.getElementById('orders-body');
+  let visible = _allOrders;
+  if (_currentFilter === 'pending')   visible = _allOrders.filter(o => o.status === 'pending');
+  if (_currentFilter === 'completed') visible = _allOrders.filter(o => o.status === 'completed');
+
+  if (!visible.length) {
+    body.innerHTML = `<div class="empty-orders"><div class="icon">✅</div><p>${_currentFilter === 'pending' ? 'All caught up! No pending orders.' : 'Nothing here yet.'}</p></div>`;
+    return;
+  }
+
+  // Sort: pending first, then by timestamp desc
+  visible = [...visible].sort((a,b) => {
+    if (a.status === b.status) return b.timestamp - a.timestamp;
+    return a.status === 'pending' ? -1 : 1;
+  });
+
+  const now = Date.now()/1000;
+  body.innerHTML = visible.map(o => {
+    const isPending   = o.status === 'pending';
+    const ageSeconds  = now - o.timestamp;
+    const isUrgent    = isPending && ageSeconds > 120;
+
+    return `
+      <div class="order-card ${!isPending ? 'completed' : ''} ${isUrgent ? 'is-urgent' : ''}" id="oc-${o.id}">
+        <div>
+          <div class="order-num">
+            ${o.id}
+            ${isUrgent ? `<span class="urgent-badge">WAITING LONG</span>` : ''}
+          </div>
+          <div class="order-item">${o.item}</div>
+          <div class="order-seat">📍 ${o.user}</div>
+          <div class="order-time">Placed ${timeAgo(o.timestamp)} · ${isPending ? '<span style="color:var(--warn);font-weight:600">Pending</span>' : '<span style="color:var(--safe);font-weight:600">Done ✓</span>'}</div>
+        </div>
+        <div class="order-actions">
+          ${isPending
+            ? `<button class="btn btn-safe btn-sm" onclick="completeOrder('${o.id}')">✓ Done</button>`
+            : `<button class="btn btn-sm" style="background:var(--surface);color:var(--t2);cursor:default">Completed</button>`
+          }
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Complete order ──
+async function completeOrder(orderId) {
+  try {
+    await fetch(`${API}/api/vendor/${currentVendor}/orders/${orderId}/complete`, { method: 'POST' });
+    // Optimistic update
+    const o = _allOrders.find(o => o.id === orderId);
+    if (o) o.status = 'completed';
+    renderOrders();
+    const pending = _allOrders.filter(o => o.status === 'pending').length;
+    document.getElementById('order-count').textContent = pending;
+    showToast(`✅ Order ${orderId} marked complete`);
+  } catch(e) {
+    showToast('⚠️ Failed to update order');
+  }
+}
+
+// ── Clear completed ──
+function clearCompleted() {
+  _allOrders = _allOrders.filter(o => o.status === 'pending');
+  renderOrders();
+  showToast('🗑 Completed orders cleared from view');
+}
+
+// ── Wait time override ──
+async function doOverride() {
+  const val = parseInt(document.getElementById('override-input').value);
+  if (isNaN(val) || val < 0) { showToast('⚠️ Enter a valid wait time in seconds'); return; }
+  try {
+    await fetch(`${API}/api/vendor/${currentVendor}/wait-time`, {
+      method:  'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({ waitTime: val }),
+    });
+    document.getElementById('m-wait').textContent = Math.round(val/60);
+    document.getElementById('override-input').value = '';
+    showToast(`✅ Wait time set to ${val}s (${Math.round(val/60)} min)`);
+  } catch(e) {
+    showToast('⚠️ Override failed — server offline?');
+  }
+}
+
+// ── Toast ──
+let _toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Boot ──
+async function refresh() {
+  await Promise.all([fetchStats(), fetchOrders()]);
+}
+
+refresh();
+setInterval(refresh, 4000);
+</script>
+</body>
+</html>

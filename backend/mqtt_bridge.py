@@ -76,11 +76,24 @@ class SwiftSeatMQTTBridge:
         try:
             events_ref = self.db.collection('Events').document(EVENT_ID)
             
-            if sensor_type == "density":
-                # Convert raw count (e.g. from a camera or PIR) to a density score
-                raw_count = payload.get("count", 0)
-                # mock formula: 1 count = 0.2 density
-                density = min(5.0, max(0.0, raw_count * 0.2))
+            # Write node-specific telemetry to Admin bucket
+            admin_node_ref = self.db.collection('Admin').document('Hardware').collection('Nodes').document(node_id)
+            admin_node_ref.set({
+                "lastSeen": time.time(),
+                "status": "online",
+                "cameraStatus": payload.get("camera_status", "offline"),
+                "sensorType": sensor_type,
+                "latestPayload": payload
+            }, merge=True)
+            
+            if sensor_type == "thermal":
+                # Using 8x8 AMG8833 Thermal Array or a dummy array of temperatures
+                thermal_grid = payload.get("grid", [])
+                
+                # Derive density from heat signatures (>30C)
+                hot_spots = sum(1 for temp in thermal_grid if temp > 30.0)
+                # mock formula: each distinct hotspot equates to approx 2 people
+                density = min(5.0, max(0.0, hot_spots * 0.4))
                 
                 status = "SAFE"
                 if density >= 4.0:
@@ -93,9 +106,9 @@ class SwiftSeatMQTTBridge:
                     "currentDensity": round(density, 2),
                     "status": status,
                     "lastUpdated": time.time(),
-                    "source": "mqtt_hardware"
+                    "source": "mqtt_thermal"
                 }, merge=True)
-                print(f" -> Updated Zone {node_id} to density {round(density, 2)} ({status})")
+                print(f" -> Thermal processed for Zone {node_id}. Hotspots: {hot_spots}, Calc Density: {round(density, 2)}")
                 
             elif sensor_type == "wait_time":
                 wait_sec = payload.get("time_sec", 0)
@@ -103,6 +116,7 @@ class SwiftSeatMQTTBridge:
                 doc_ref.set({
                     "estimatedWaitTime": wait_sec,
                     "lastUpdated": time.time(),
+                    "queueLength": payload.get("queue_length", 0),
                     "source": "mqtt_hardware"
                 }, merge=True)
                 print(f" -> Updated Concession {node_id} to wait time {wait_sec}s")
