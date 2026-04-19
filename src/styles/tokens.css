@@ -1,0 +1,67 @@
+:root {
+  /* Colors - Tonal Palette */
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #14141d;
+  --bg-tertiary: #1b1b26;
+  
+  --accent-primary: #6366f1; /* Indigo */
+  --accent-secondary: #0ea5e9; /* Sky */
+  --accent-success: #10b981;
+  --accent-warning: #f59e0b;
+  --accent-danger: #ef4444;
+  
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  /* Tonal Surfaces (Stitch Integration) */
+  --surface-base: #0b1326;
+  --surface-low: #131b2e;
+  --surface-high: #222a3d;
+  --surface-bright: #31394d;
+  --surface-variant: #0e0e0e; /* Vendor darker foundation */
+
+  /* Typography Styles */
+  --font-tactical: 'Manrope', sans-serif;
+  --font-editorial: 'Outfit', sans-serif;
+  --font-technical: 'Inter', sans-serif;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(12px);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, .brand {
+  font-family: 'Outfit', sans-serif;
+}

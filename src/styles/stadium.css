@@ -1,0 +1,66 @@
+.stadium-svg {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  background: var(--bg-tertiary);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.zone {
+  transition: fill 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+  cursor: pointer;
+}
+
+.zone:hover {
+  opacity: 1 !important;
+  stroke: var(--text-dim);
+  stroke-width: 1px;
+}
+
+/* Density states mapped from PALO logic */
+.zone-safe {
+  fill: var(--accent-success) !important;
+  opacity: 0.2;
+}
+
+.zone-warning {
+  fill: var(--accent-warning) !important;
+  opacity: 0.5;
+}
+
+.zone-critical {
+  fill: var(--accent-danger) !important;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 10px var(--accent-danger));
+}
+
+.vendor-dot {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 5px var(--accent-secondary));
+}
+
+.vendor-dot.active {
+  fill: var(--accent-primary);
+  r: 9;
+}
+
+.zone-label, .vendor-label {
+  pointer-events: none;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+.heatmap-overlay {
+  position: relative;
+}
+
+.zone-tooltip {
+  position: absolute;
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}

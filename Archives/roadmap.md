@@ -7,10 +7,13 @@
 - [x] Efficiency audit: Pivot from "Dijkstra Architecture" to "Gemini-First Architecture" for hackathon alignment.
 - [x] Design PALO scoring algorithm (Predictive Arrival-time, Load-balanced Optimization).
 
-## Phase 2: Foundation & Setup (Current)
+## Phase 2: Foundation & Setup (Completed)
+- [x] Unified React Platform: Scaffolding with Vite, TypeScript, and CSS tokens.
+- [x] Design System: implemented "Gemini-First" glassmorphism and "No-Line" rule.
+- [x] Core Hooks: `useSwiftSeat` (API) and `usePALO` (Algorithm) ported and functional.
+- [x] Role-Based Shell: Admin, User, and Vendor components integrated.
 - [ ] Create GCP project. Enable: Maps JS API, Compute Route Matrix, Gemini API, Firestore, Cloud Functions, FCM.
 - [ ] Create Firebase project linked to GCP.
-- [ ] Scaffold vanilla PWA frontend (`index.html`, `styles.css`, `app.js`, `manifest.json`, `sw.js`).
 - [ ] Design Firestore schema: `/Events/{eventId}/Zones`, `/Concessions`, `/Orders`, `/RoutingLog`.
 - [ ] Create stadium SVG overlay with mapped zone IDs.
 
