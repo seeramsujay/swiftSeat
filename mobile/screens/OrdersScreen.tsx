@@ -3,9 +3,12 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { Screen } from '../components/Screen';
 import { Theme } from '../constants/Theme';
 import { GlassContainer } from '../components/GlassContainer';
+import { useStadiumData } from '../hooks/useStadiumData';
 import { Utensils, Ticket, Clock, ChevronRight } from 'lucide-react-native';
 
 const OrdersScreen = () => {
+  const { concessions, loading } = useStadiumData();
+
   return (
     <Screen>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -22,48 +25,27 @@ const OrdersScreen = () => {
               <Text style={styles.voucherCode}>CODE: SWIFT-FLY-2024</Text>
             </View>
           </View>
-          <View style={styles.voucherFooter}>
-            <Text style={styles.voucherExpiry}>Expires in 4 hours</Text>
-          </View>
         </GlassContainer>
 
         <Text style={styles.sectionTitle}>Recent Concessions</Text>
         <View style={styles.orderList}>
-          {[
-            { name: 'Prime Pit BBQ', items: '2x Brisket Sliders', status: 'In Queue', time: '5m wait' },
-            { name: 'Stadium Brews', items: '1x Craft IPA', status: 'Ready', time: 'Now' },
-          ].map((order, i) => (
-            <TouchableOpacity key={i} style={styles.orderItem}>
-              <GlassContainer style={styles.orderCard} intensity={50}>
-                <View style={styles.orderRow}>
-                  <View style={styles.orderMain}>
-                    <Text style={styles.orderName}>{order.name}</Text>
-                    <Text style={styles.orderItems}>{order.items}</Text>
-                  </View>
-                  <View style={styles.orderStatusArea}>
-                    <Text style={[
-                      styles.orderStatus, 
-                      { color: order.status === 'Ready' ? Theme.colors.tertiary : Theme.colors.primary }
-                    ]}>
-                      {order.status}
-                    </Text>
-                    <View style={styles.orderTime}>
-                      <Clock size={12} color={Theme.colors.textVariant} />
-                      <Text style={styles.timeText}>{order.time}</Text>
+          {loading ? (
+            <Text style={styles.loadingText}>Syncing stadium data...</Text>
+          ) : (
+            concessions.map((order, i) => (
+              <TouchableOpacity key={i} style={styles.orderItem}>
+                <GlassContainer style={styles.orderCard} intensity={50}>
+                  <View style={styles.orderRow}>
+                    <View style={styles.orderMain}>
+                      <Text style={styles.orderName}>{order.name}</Text>
+                      <Text style={styles.orderItems}>Estimated wait: {order.waitTime}m</Text>
                     </View>
                   </View>
-                </View>
-              </GlassContainer>
-            </TouchableOpacity>
-          ))}
+                </GlassContainer>
+              </TouchableOpacity>
+            ))
+          )}
         </View>
-
-        <Text style={styles.sectionTitle}>Explore Concessions</Text>
-        <GlassContainer style={styles.exploreCard}>
-          <Utensils size={20} color={Theme.colors.primary} />
-          <Text style={styles.exploreText}>View full concession menu</Text>
-          <ChevronRight size={20} color={Theme.colors.textVariant} />
-        </GlassContainer>
       </ScrollView>
     </Screen>
   );
