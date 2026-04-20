@@ -12,6 +12,7 @@
 - [x] Design System: implemented "Gemini-First" glassmorphism and "No-Line" rule.
 - [x] Core Hooks: `useSwiftSeat` (API) and `usePALO` (Algorithm) ported and functional.
 - [x] Role-Based Shell: Admin, User, and Vendor components integrated.
+- [x] Mobile Native Transition: Expo (React Native) scaffolded with "Velocity Slate" DS.
 - [ ] Create GCP project. Enable: Maps JS API, Compute Route Matrix, Gemini API, Firestore, Cloud Functions, FCM.
 - [ ] Create Firebase project linked to GCP.
 - [ ] Design Firestore schema: `/Events/{eventId}/Zones`, `/Concessions`, `/Orders`, `/RoutingLog`.
@@ -54,3 +55,9 @@
 - [ ] Final README with architecture diagram and PALO algorithm explanation.
 - [ ] Record end-to-end demo video.
 - [ ] Verify repo size < 1MB. Submit.
+## Phase 8: Mobile Native Polish (In Progress)
+- [x] Scaffold Expo app with "Kinetic Oasis" design system components.
+- [x] Implement UI for Concierge, Live Map, Orders, and Profile.
+- [ ] Port PALO logic from Vite app to React Native `usePALO` hook.
+- [ ] Implement Firebase Auth and Firestore listeners in Native app.
+- [ ] Configure CI/CD (GitHub Actions) for Android APK builds.

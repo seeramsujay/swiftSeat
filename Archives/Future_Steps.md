@@ -13,7 +13,8 @@
 3. **PALO Routing Engine**: Integrate `usePALO.ts` with real-time routing log metrics.
 4. **Gemini Concierge**: Central AI agent using function calling to orchestrate routing, ordering, and alerts. THE hero feature.
 5. **Wallet + Safety**: Google Wallet pass push on entry. FCM alerts for dangerous density zones.
-6. **Offline-First**: Service worker caches map, ticket, and queues orders for sync when connectivity returns.
+6. **Mobile Native Polish**: Connect Expo app to Firebase, port PALO engine, and finalize glassmorphism interactions.
+7. **Offline-First**: Service worker caches map, ticket, and queues orders for sync when connectivity returns.
 
 ## Algorithm: PALO (Predictive Arrival-time, Load-balanced Optimization)
 See `Archives/algorithm_design.md` for full specification.
