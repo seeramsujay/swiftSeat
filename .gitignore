@@ -54,4 +54,6 @@ android/.gradle/
 ios/App/build/
 ios/App/Pods/
 ios/App/Frameworks/
-conductor/
+conductor/mobile/android/
+mobile/local-sdk/
+*.apk
