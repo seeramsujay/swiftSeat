@@ -13,7 +13,8 @@
 - [x] Core Hooks: `useSwiftSeat` (API) and `usePALO` (Algorithm) ported and functional.
 - [x] Role-Based Shell: Admin, User, and Vendor components integrated.
 - [x] Mobile Native Transition: Expo (React Native) scaffolded with "Velocity Slate" DS.
-- [ ] Create GCP project. Enable: Maps JS API, Compute Route Matrix, Gemini API, Firestore, Cloud Functions, FCM.
+- [x] Create backend Dockerfile & deployment script.
+- [x] Deploy to Cloud Run. Enable: Maps JS API, Compute Route Matrix, Gemini API, Firestore, Cloud Functions, FCM.
 - [ ] Create Firebase project linked to GCP.
 - [ ] Design Firestore schema: `/Events/{eventId}/Zones`, `/Concessions`, `/Orders`, `/RoutingLog`.
 - [ ] Create stadium SVG overlay with mapped zone IDs.

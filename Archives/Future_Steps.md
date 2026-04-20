@@ -4,7 +4,8 @@
 - [x] Efficiency audit completed — pivoted from "Dijkstra Architecture" to "Gemini-First Architecture".
 - [x] Designed PALO algorithm (Predictive Arrival-time, Load-balanced Optimization) as the core routing engine.
 - [x] Scaffold Unified React Platform (Vite/TS/CSS-Tokens).
-- [ ] Setup GCP + Firebase project. Enable all required APIs (Maps, Gemini, Firestore, Functions, FCM, Wallet, Translate).
+- [x] Create backend Dockerfile and `deploy_cloudrun.sh`.
+- [x] Deploy backend to Cloud Run. Setup GCP + Firebase project. Enable all required APIs (Maps, Gemini, Firestore, Functions, FCM, Wallet, Translate).
 - [ ] Provision API keys. Store securely (never in repo — use Cloud Function environment variables).
 
 ## Development Milestones
