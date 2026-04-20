@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, KeyboardAvoidingView, Platform, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, KeyboardAvoidingView, Platform, Animated, TouchableOpacity } from 'react-native';
 import { Screen } from '../components/Screen';
 import { Theme } from '../constants/Theme';
 import { GlassContainer } from '../components/GlassContainer';
@@ -121,7 +121,5 @@ const styles = StyleSheet.create({
   input: { flex: 1, color: Theme.colors.text, height: 44 },
   sendButton: { backgroundColor: Theme.colors.primary, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
 });
-
-export default ConciergeScreen;
 
 export default ConciergeScreen;

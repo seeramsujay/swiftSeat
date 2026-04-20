@@ -162,6 +162,12 @@ const styles = StyleSheet.create({
     ...Theme.typography.body,
     color: Theme.colors.text,
   },
+  loadingText: {
+    ...Theme.typography.body,
+    color: Theme.colors.textVariant,
+    textAlign: 'center',
+    marginTop: Theme.spacing.lg,
+  },
 });
 
 export default OrdersScreen;
