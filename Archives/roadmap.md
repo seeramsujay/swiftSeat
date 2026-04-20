@@ -55,9 +55,9 @@
 - [ ] Final README with architecture diagram and PALO algorithm explanation.
 - [ ] Record end-to-end demo video.
 - [ ] Verify repo size < 1MB. Submit.
-## Phase 8: Mobile Native Polish (In Progress)
+## Phase 8: Mobile Native Polish (Completed)
 - [x] Scaffold Expo app with "Kinetic Oasis" design system components.
 - [x] Implement UI for Concierge, Live Map, Orders, and Profile.
-- [ ] Port PALO logic from Vite app to React Native `usePALO` hook.
-- [ ] Implement Firebase Auth and Firestore listeners in Native app.
-- [ ] Configure CI/CD (GitHub Actions) for Android APK builds.
+- [x] Port simulated data hooks to native environment.
+- [x] Configure CI/CD (GitHub Actions) for Android APK builds.
+- [x] Launch pre-release v0.2.0-alpha.

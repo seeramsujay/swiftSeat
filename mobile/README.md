@@ -1,29 +1,28 @@
-# SwiftSeat Mobile (User App)
+# SwiftSeat Mobile (User App) 📱
 
-This is the mobile-native implementation of the SwiftSeat User Experience, built with **Expo** and **React Native**.
+Implementation of the SwiftSeat UX using **Expo** and **React Native**.
 
-## Design Philosophy: The Kinetic Oasis
-Following the "Velocity Slate" design system:
-- **Atmospheric Navigator:** Dark, calm colors (#10141a) to reduce sensory overload.
-- **Glassmorphism:** All overlays and cards utilize deep backdrop blurs (20px) for tactile depth.
-- **No-Line Rule:** No thin borders. Tonal layering and negative space create boundaries.
-- **Accessibility:** High-contrast typography (Inter) optimized for high-glare stadium lighting.
+## ✨ Features
+- **Gemini-First Concierge**: Voice and text assistant for stadium navigation and food ordering.
+- **Dynamic Heatmap**: Live crowd density visualization on the stadium map.
+- **Voucher Wallet**: Digital concession vouchers and ticket management.
+- **Atmospheric Palette**: Dark mode optimized for stadium glare.
 
-## Core Features
-- **AI Concierge:** Polished chat interface for smart stadium assistance.
-- **Live Stadium Map:** Real-time crowd density visualization (Mocked SVG) and PALO routing results.
-- **Orders & Vouchers:** Digital ticket management and concession status tracking.
-- **Google Wallet Integration:** (Planned) Push tickets and vouchers to device wallet.
+## 🏗️ Technical Architecture
+- **State Management**: React Hooks + Custom `useStadiumData` stream.
+- **Glassmorphism**: Native blurs using `expo-blur`.
+- **Navigation**: Tab-based navigation with animated spring interactions.
+- **CI/CD**: Automatic APK builds via GitHub Actions and EAS Build CLI.
 
-## How to Run
-1.  Navigate to `mobile/` directory.
-2.  Run `npx expo start`.
-3.  Scan the QR code with the **Expo Go** app on your iOS or Android device.
-4.  (Optional) Press `w` to run in web browser.
+## 🚀 Installation & Build
+```bash
+# To run locally with Expo Go
+npm install
+npx expo start
 
-## Tech Stack
-- **Framework:** Expo SDK 50+
-- **Styling:** React Native StyleSheet (Vanilla)
-- **Icons:** Lucide-React-Native
-- **Navigation:** React Navigation (Tabs)
-- **Visuals:** Expo Blur (Glassmorphism)
+# To build APK manually
+npx eas build --platform android --profile preview --local
+```
+
+## 📦 Releases
+Built APKs are automatically generated on tag push (`v*`) and available in the **[Releases](https://github.com/seeramsujay/swiftSeat/releases)** section.

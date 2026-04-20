@@ -1,101 +1,64 @@
 # SwiftSeat — Smart Venue Experience Assistant 🏟️
 
-A dynamic, intelligent system designed to revolutionize the attendee experience at large-scale sporting events using the **PALO Algorithm** and **Gemini AI**.
+[![Build Mobile APK](https://github.com/seeramsujay/swiftSeat/actions/workflows/mobile-build.yml/badge.svg)](https://github.com/seeramsujay/swiftSeat/actions/workflows/mobile-build.yml)
+[![Version](https://img.shields.io/badge/version-0.2.0--alpha-blue.svg)](https://github.com/seeramsujay/swiftSeat/releases)
 
-## 🚀 Overview
-This project addresses the critical logistical challenges of modern stadiums — crowd congestion, concession wait times, and emergency response. By integrating Google Services and a predictive routing algorithm, we provide fans with a seamless, frictionless journey from entry to exit.
-
-## 🏆 Hackathon Vertical
-**Persona & Logic:** Smart Venue Assistant for High-Density Environments.
-
-## 🧠 Core Innovation: The PALO Algorithm
-**Predictive Arrival-time, Load-balanced Optimization** — our routing engine doesn't just find the *currently* fastest concession stand. It predicts what the wait will be **when you arrive**, factors in how many other users are being routed there (avoiding the herd effect), and respects accessibility needs.
-
-```
-score = walk_time + predicted_wait_at_arrival + load_balancing_penalty
-```
-
-See `Archives/algorithm_design.md` for the full specification with worked examples.
-
-## 🛠️ Key Features (MVP)
-1. **Gemini AI Stadium Concierge**: A multimodal conversational agent — say "I want a burger" and the AI orchestrates routing, ordering, and payment via function calling.
-2. **Smart Concession Routing (PALO)**: Recommends the fastest stand factoring walk time, predicted wait-at-arrival, and load balancing across all users.
-3. **Real-Time Crowd Density Heatmap**: Live SVG-based concourse visualization powered by Firestore real-time listeners.
-4. **Google Wallet Integration**: Auto-linked digital tickets and concession vouchers pushed on entry.
-5. **Dynamic Density Alerting**: Firebase Cloud Messaging alerts when crowd density breaches safety thresholds, with escape routing.
-
-## 📐 Architecture
-- **Frontend**: Vanilla HTML/CSS/JS Progressive Web App (offline-first, < 100KB).
-- **Backend**: Google Cloud Functions (serverless).
-- **Database**: Cloud Firestore (real-time sync, denormalized schema).
-- **AI**: Gemini 2.0 Flash with function calling (the central orchestrator).
-- **Maps**: Google Maps JS API + Compute Route Matrix.
-- **Payments**: Google Wallet API.
-- **Alerts**: Firebase Cloud Messaging.
-
-## 📂 Repository Structure
-- `Research/` — Detailed problem analysis and technology landscape report.
-- `Archives/` — Roadmap, algorithm design, and development logs.
-  - `algorithm_design.md` — Full PALO algorithm specification.
-  - `roadmap.md` — Phase-by-phase development checklist.
-- `project_guidelines.md` — Submission rules and requirements.
-
-## 🚀 How to Run Locally
-
-You will need three terminal windows to run the complete simulation environment: the stadium mock data generator, the Gemini AI proxy, and the frontend app.
-
-### 1. Setup the Python Environment
-Open a terminal and install the required dependencies:
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-### 2. Configure Gemini API
-1. Get a Gemini API key from Google AI Studio.
-2. Inside the `/backend` folder, copy `.env.example` to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-3. Paste your API key into the `.env` file (`GEMINI_API_KEY="..."`).
-
-*(Note: If you skip this, the proxy will run in Mock Mode).*
-
-### 3. Run the Services (3 Terminals)
-
-**Terminal 1: Start the Stadium Telemetry Generator**
-Simulates 50,000+ users generating live density and concession wait-time spikes.
-```bash
-cd backend
-python mock_generator.py
-```
-
-**Terminal 2: Start the Gemini AI Proxy**
-Bootstraps the Flask server that handles Function Calling.
-```bash
-cd backend
-python server.py
-```
-
-**Terminal 3: Start the Frontend PWA**
-Run a simple HTTP server to serve the HTML/JS application securely.
-```bash
-cd public
-python -m http.server 8000
-```
-Open your browser and navigate to `http://localhost:8000`.
-
-## 📜 Accessibility & Inclusion
-Built with **WCAG 2.1 AA** compliance:
-- High-contrast "Calm UI" for high-glare stadium environments.
-- Step-free route filtering for mobility-impaired attendees.
-- TTS-narrated directions for visually impaired fans.
-- Emergency mode: strips all commercial UI, shows singular escape vector.
-
-## 🔒 Privacy
-- Anonymous density tracking via geohash aggregation (no PII transmitted).
-- k-anonymity and spatial cloaking on-device.
-- Compliant with India's DPDP Act 2023.
+A dynamic, cross-platform intelligent system designed to revolutionize the attendee experience at large-scale sporting events using the **PALO Algorithm** and **Gemini AI**.
 
 ---
-*Created as part of the Prompt Wars challenge.*
+
+## 🚀 The Vision
+SwiftSeat addresses the critical logistical challenges of modern stadiums: crowd congestion, concession wait times, and emergency response. By integrating Google Cloud Services and a predictive routing algorithm, we provide fans with a **seamless, frictionless journey** from entry to exit.
+
+## 📱 Platforms
+*   **Mobile App (Recommended)**: Built with **Expo/React Native**. Experience the "Kinetic Oasis" design system.
+    *   👉 **[Download Latest APK](https://github.com/seeramsujay/swiftSeat/releases)**
+*   **Web Console**: Built with **Vite/React**. For administrative and stadium management views.
+
+## 🧠 Core Innovation: The PALO Algorithm
+**Predictive Arrival-time, Load-balanced Optimization** — our routing engine doesn't just find the *currently* fastest concession stand. It predicts wait times at your **arrival time**, factoring in walk distance and global load balancing.
+
+```mermaid
+graph LR
+    A[User Request] --> B{Gemini AI}
+    B --> C[PALO Engine]
+    C --> D[Walk Time Prediction]
+    C --> E[Arrival Wait Extrapolation]
+    C --> F[Load Balancing Penalty]
+    F --> G[Optimal Route Result]
+```
+
+## 🎨 Design System: "Kinetic Oasis"
+*   **Atmospheric Navigator**: Deep midnight palette (`#10141a`) optimized for stadium-glare legibility.
+*   **Glassmorphism**: 20px background blurs for depth and tactile feedback.
+*   **No-Line Rule**: Tonal layering instead of 1px borders for a premium, integrated feel.
+
+## 📂 Repository Structure
+*   `mobile/` — React Native (Expo) mobile application.
+*   `src/` — React (Vite) web console.
+*   `backend/` — Python-based telemetry simulation and Gemini proxy.
+*   `Archives/` — Technical specifications and research.
+
+## 🛠️ Setup & Development
+
+### Mobile (Expo)
+```bash
+cd mobile
+npm install
+npx expo start
+```
+*Scan the QR code with **Expo Go** to test on a physical device.*
+
+### Web (Vite)
+```bash
+npm install
+npm run dev
+```
+
+## 📜 Accessibility & Inclusion
+*   **Step-free Routing**: Prioritizes mobility-accessible paths.
+*   **High-Glare UX**: WCAG 2.1 AA compliant contrast ratios.
+*   **TTS Integration**: Narrated directions for visually impaired fans.
+
+---
+*Created for the Prompt Wars Hackathon — Revolutionizing Venue Logistics.*
