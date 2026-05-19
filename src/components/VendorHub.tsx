@@ -18,6 +18,8 @@ import {
 import { clsx } from 'clsx';
 import { Order } from '../types';
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 type VendorTab = 'dashboard' | 'queue' | 'inventory' | 'analytics';
 
 const VendorHub: React.FC = () => {
@@ -37,7 +39,7 @@ const VendorHub: React.FC = () => {
     if (!selectedVendorId) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/vendor/${selectedVendorId}/orders`);
+      const res = await fetch(`${API_BASE}/api/vendor/${selectedVendorId}/orders`);
       const data = await res.json();
       setOrders(data.orders || []);
     } catch (err) {
@@ -55,7 +57,7 @@ const VendorHub: React.FC = () => {
 
   const completeOrder = async (orderId: string) => {
     try {
-      await fetch(`/api/vendor/${selectedVendorId}/orders/${orderId}/complete`, {
+      await fetch(`${API_BASE}/api/vendor/${selectedVendorId}/orders/${orderId}/complete`, {
         method: 'POST'
       });
       fetchOrders();

@@ -6,6 +6,8 @@ import OrderOverlay from './OrderOverlay';
 import StadiumPass from './StadiumPass';
 import { clsx } from 'clsx';
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 interface Message {
   id: string;
   role: 'user' | 'bot';
@@ -41,7 +43,7 @@ const UserConcierge: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input })
@@ -129,7 +131,7 @@ const UserConcierge: React.FC = () => {
             
             // Post to backend to actually place order
             try {
-              await fetch('/api/order', {
+              await fetch(`${API_BASE}/api/order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ vendor_id: currentVendor, item: currentItem })
