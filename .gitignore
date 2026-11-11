@@ -57,3 +57,7 @@ ios/App/Frameworks/
 conductor/mobile/android/
 mobile/local-sdk/
 *.apk
+__pycache__/
+*.pyc
+*.pid
+
