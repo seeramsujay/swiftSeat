@@ -22,6 +22,6 @@ jobs:
       - name: MegaLinter
         uses: oxsecurity/megalinter/flavors/cupcake@v8
         env:
-          VALIDATE_ALL_CODE_BASE: true
+          VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
