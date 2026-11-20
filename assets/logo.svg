@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C14" />
+      <stop offset="50%" stop-color="#10141A" />
+      <stop offset="100%" stop-color="#05080E" />
+    </linearGradient>
+
+    <!-- Stadium PALO Swift Gradient -->
+    <linearGradient id="swift-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+
+    <!-- Navigation Pulse Gradient -->
+    <linearGradient id="nav-pulse" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+
+    <linearGradient id="core-glow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.05" />
+    </linearGradient>
+
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="subtle-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="800" rx="160" fill="url(#bg-grad)" />
+  <rect width="796" height="796" x="2" y="2" rx="158" fill="none" stroke="#1E293B" stroke-width="2" />
+
+  <!-- Stadium Concourse Reticle & Navigation Rings -->
+  <g opacity="0.16" stroke="#00D2FF" stroke-width="1.5">
+    <ellipse cx="400" cy="380" rx="240" ry="160" fill="none" stroke-dasharray="8 8" />
+    <ellipse cx="400" cy="380" rx="160" ry="100" fill="none" stroke-dasharray="6 6" />
+    <line x1="400" y1="100" x2="400" y2="660" stroke-dasharray="4 8" />
+    <line x1="120" y1="380" x2="680" y2="380" stroke-dasharray="4 8" />
+  </g>
+
+  <!-- Arena Rim Outline -->
+  <path d="M 200 320 A 220 140 0 1 1 600 320 L 560 480 A 180 110 0 0 1 240 480 Z" fill="none" stroke="#1E293B" stroke-width="3" />
+
+  <!-- The SwiftSeat Silhouette (Seat Back + Predictive Fast-Path Arrow) -->
+  <path d="M 320 220 
+           C 320 200, 480 200, 480 220 
+           L 480 340 
+           C 480 360, 320 360, 320 340 Z" 
+        fill="url(#core-glow)" 
+        stroke="url(#swift-grad)" 
+        stroke-width="8" 
+        stroke-linejoin="round" 
+        filter="url(#glow)" />
+
+  <!-- Stadium Seat Cushion -->
+  <polygon points="300,360 500,360 540,440 260,440" fill="#111827" stroke="url(#swift-grad)" stroke-width="6" stroke-linejoin="round" filter="url(#glow)" />
+
+  <!-- PALO Algorithm Dynamic Routing Vector -->
+  <path d="M 230 460 
+           Q 350 380, 400 300 
+           L 420 350 
+           L 570 380" 
+        fill="none" 
+        stroke="url(#nav-pulse)" 
+        stroke-width="7" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        filter="url(#subtle-glow)" />
+
+  <!-- Navigation Arrowhead -->
+  <polygon points="570,380 540,365 545,395" fill="#10B981" filter="url(#subtle-glow)" />
+
+  <!-- Concession & Restroom Low-Wait Waypoint Indicators -->
+  <g filter="url(#subtle-glow)">
+    <circle cx="260" cy="440" r="12" fill="#10B981" />
+    <circle cx="260" cy="440" r="18" fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="3 3" />
+    <circle cx="400" cy="300" r="9" fill="#F8FAFC" stroke="#06B6D4" stroke-width="3" />
+    <circle cx="500" cy="360" r="12" fill="#F59E0B" />
+    <circle cx="500" cy="360" r="18" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="3 3" />
+  </g>
+
+  <!-- Typography -->
+  <text x="400" y="685" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="800" fill="#F8FAFC" letter-spacing="4">
+    SWIFT<tspan fill="#06B6D4">SEAT</tspan>
+  </text>
+  <text x="400" y="722" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#94A3B8" letter-spacing="3">
+    VENUE LOGISTICS &amp; PALO ROUTING PLATFORM
+  </text>
+</svg>

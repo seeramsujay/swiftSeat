@@ -1,22 +1,39 @@
-# SwiftSeat — Smart Venue Experience Assistant 🏟️
+<p align="center">
+  <img src="assets/logo.svg" alt="SwiftSeat Logo" width="220" />
+</p>
 
-[![Build Mobile APK](https://github.com/seeramsujay/swiftSeat/actions/workflows/mobile-build.yml/badge.svg)](https://github.com/seeramsujay/swiftSeat/actions/workflows/mobile-build.yml)
-[![Version](https://img.shields.io/badge/version-0.2.0--alpha-blue.svg)](https://github.com/seeramsujay/swiftSeat/releases)
+<h1 align="center">SwiftSeat</h1>
 
-A dynamic, cross-platform intelligent system designed to revolutionize the attendee experience at large-scale sporting events using the **PALO Algorithm** and **Gemini AI**.
+<p align="center">
+  <strong>Smart Venue Experience Assistant, Predictive PALO Algorithm, &amp; Gemini AI Stadium Logistics.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Mobile-React_Native_%7C_Expo-4630EB.svg?style=flat-square&logo=expo" alt="Expo">
+  <img src="https://img.shields.io/badge/Web_Console-Vite_%7C_React-61DAFB.svg?style=flat-square&logo=react" alt="Vite React">
+  <img src="https://img.shields.io/badge/Algorithm-PALO_Routing-10B981.svg?style=flat-square" alt="PALO Algorithm">
+  <img src="https://img.shields.io/badge/AI_Engine-Google_Gemini-4285F4.svg?style=flat-square&logo=google" alt="Gemini AI">
+  <a href="future.md"><img src="https://img.shields.io/badge/roadmap-future.md-blueviolet.svg?style=flat-square" alt="Roadmap"></a>
+</p>
 
 ---
 
 ## 🚀 The Vision
-SwiftSeat addresses the critical logistical challenges of modern stadiums: crowd congestion, concession wait times, and emergency response. By integrating Google Cloud Services and a predictive routing algorithm, we provide fans with a **seamless, frictionless journey** from entry to exit.
+
+**SwiftSeat** addresses the critical logistical challenges of modern stadiums: crowd congestion, concession wait times, and emergency response. By integrating Google Cloud Services and a predictive routing algorithm, we provide fans with a **seamless, frictionless journey** from entry to exit.
+
+---
 
 ## 📱 Platforms
-*   **Mobile App (Recommended)**: Built with **Expo/React Native**. Experience the "Kinetic Oasis" design system.
-    *   👉 **[Download Latest APK](https://github.com/seeramsujay/swiftSeat/releases)**
-*   **Web Console**: Built with **Vite/React**. For administrative and stadium management views.
+
+*   **Mobile App (Recommended)**: Built with **Expo / React Native**. Experience the tactile "Kinetic Oasis" design system.
+*   **Web Console**: Built with **Vite / React**. Engineered for venue administrators and stadium operations teams.
+
+---
 
 ## 🧠 Core Innovation: The PALO Algorithm
-**Predictive Arrival-time, Load-balanced Optimization** — our routing engine doesn't just find the *currently* fastest concession stand. It predicts wait times at your **arrival time**, factoring in walk distance and global load balancing.
+
+**Predictive Arrival-time, Load-balanced Optimization** — our routing engine doesn't just find the *currently* shortest concession stand line. It projects wait times at the attendee's calculated **arrival timestamp**, factoring in walk distance, queue flow rates, and global concourse balancing.
 
 ```mermaid
 graph LR
@@ -28,16 +45,29 @@ graph LR
     F --> G[Optimal Route Result]
 ```
 
+---
+
 ## 🎨 Design System: "Kinetic Oasis"
-*   **Atmospheric Navigator**: Deep midnight palette (`#10141a`) optimized for stadium-glare legibility.
-*   **Glassmorphism**: 20px background blurs for depth and tactile feedback.
-*   **No-Line Rule**: Tonal layering instead of 1px borders for a premium, integrated feel.
+
+*   **Atmospheric Navigator**: Deep midnight palette (`#10141a`) optimized for outdoor stadium-glare legibility.
+*   **Glassmorphism**: 20px background blurs for tactile physical depth.
+*   **No-Line Rule**: Tonal layering instead of 1px borders for a premium, integrated aesthetic.
+
+---
 
 ## 📂 Repository Structure
-*   `mobile/` — React Native (Expo) mobile application.
-*   `src/` — React (Vite) web console.
-*   `backend/` — Python-based telemetry simulation and Gemini proxy.
-*   `Archives/` — Technical specifications and research.
+
+```plaintext
+/swiftSeat
+├── mobile/            # React Native (Expo) mobile application
+├── src/               # React (Vite) web console
+├── backend/           # Python telemetry simulation and Gemini proxy
+├── hardware/          # IoT beacon gateway firmware specifications
+├── assets/            # Bespoke vector brand identity & media
+└── Archives/          # Research, specifications, and architecture
+```
+
+---
 
 ## 🛠️ Setup & Development
 
@@ -55,25 +85,22 @@ npm install
 npm run dev
 ```
 
+---
+
 ## 📜 Accessibility & Inclusion
-*   **Step-free Routing**: Prioritizes mobility-accessible paths.
-*   **High-Glare UX**: WCAG 2.1 AA compliant contrast ratios.
-*   **TTS Integration**: Narrated directions for visually impaired fans.
 
----
-*Created for the Prompt Wars Hackathon — Revolutionizing Venue Logistics.*
-
+*   **Step-free Routing**: Dynamically prioritizes ADA-accessible ramps and elevators.
+*   **High-Glare UX**: WCAG 2.1 AA compliant contrast ratios for bright outdoor sunlight.
+*   **TTS Integration**: Narrated turn-by-turn directions for visually impaired fans.
 
 ---
 
-## 🛡️ Licensing & Privacy Protection
+## 🔮 Engineering Roadmap
 
-Because this repository contains personal code, portfolios, or intellectual property, **strict privacy protections are in place**.
+To explore planned features including sub-meter BLE beacon positioning, live POS integration, ARCore/ARKit holographic navigation, and multi-agent emergency egress routing, read [future.md](future.md).
 
-### ⚠️ Prohibitions on AI Training & Scraping
-This repository is published for direct human viewing only. Automated data scraping, harvesting, and crawling are strictly prohibited under the author's personal copyright terms.
+---
 
-**By accessing this repository or its contents, you agree to the following terms:**
-*   **NO AI/LLM Ingestion:** Any ingestion of code, text, layouts, designs, or assets for training, validation, testing, or tuning of machine learning models, neural networks, or artificial intelligence systems (such as Large Language Models) is strictly prohibited.
-*   **NO Automated Data Scraping:** Any automated extraction, parsing, harvesting, or scraping of content by bots, crawlers, scripts, or spiders is prohibited.
-*   **Personal Use Only:** Human viewing for personal or educational review is permitted. No duplication, modification, adaptation, or commercial distribution of this work is allowed without express written permission.
+## 📄 License
+
+Distributed under the MIT License.
